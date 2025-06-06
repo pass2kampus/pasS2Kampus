@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -13,9 +12,9 @@ interface PreArrival2PageProps {
 
 export const PreArrival2Page = ({ onBack, onComplete, isCompleted }: PreArrival2PageProps) => {
   const [completedSteps, setCompletedSteps] = useState<string[]>([]);
-  const [selectedCity, setSelectedCity] = useState<string>('all');
+  const [selectedCity, setSelectedCity] = useState<string>('Paris');
 
-  const cities = ['all', 'Paris', 'Lyon', 'Marseille', 'Toulouse', 'Nice', 'Nantes', 'Strasbourg', 'Montpellier', 'Rouen', 'Reims', 'Lille', 'Bordeaux', 'Grenoble'];
+  const cities = ['Paris', 'Lyon', 'Marseille', 'Toulouse', 'Nice', 'Nantes', 'Strasbourg', 'Montpellier', 'Rouen', 'Reims', 'Lille', 'Bordeaux', 'Grenoble'];
 
   const cityData = {
     'Paris': {
@@ -221,56 +220,25 @@ export const PreArrival2Page = ({ onBack, onComplete, isCompleted }: PreArrival2
         traditions: "Les Machines de l'Île events, La Folle Journée (February)",
         tips: "Engage in art scene, use \"bonjour,\" explore local history"
       }
+    },
+    'Montpellier': {
+      food: {
+        available: "Mediterranean, French, some ethnic options.",
+        supermarkets: "Carrefour, Leclerc, Monoprix",
+        indianItems: "Basic spices at larger stores; limited Indian shops.",
+        mustBring: "Specialty spices, regional snacks"
+      },
+      weather: {
+        climate: "Mild winters (5–12°C), hot summers (20–30°C), sunny",
+        clothing: "Light jacket for winter, breathable summer clothes; sunglasses essential"
+      },
+      culture: {
+        vibe: "Young, vibrant, student-oriented.",
+        traditions: "Festival de Radio France (July), local markets",
+        tips: "Join student activities, learn basic French, explore tram system"
+      }
     }
   };
-
-   const categories = [
-    {
-      id: 'food',
-      title: "Food Preparation",
-      icon: Utensils,
-      color: "text-orange-600",
-      items: [
-        { text: "Research French cuisine and dietary options", city: "all" },
-        { text: "Learn about halal/vegetarian food availability", city: "all" },
-        { text: "Pack essential spices and specialty ingredients", city: "all" },
-        { text: "Understand French meal times and customs", city: "all" },
-        { text: "Find Asian grocery stores in Paris (13th arrondissement)", city: "Paris" },
-        { text: "Locate halal butchers in Lyon (7th arrondissement)", city: "Lyon" },
-        { text: "Research Mediterranean cuisine in Marseille", city: "Marseille" }
-      ]
-    },
-    {
-      id: 'clothing',
-      title: "Clothing & Weather",
-      icon: ShoppingBag,
-      color: "text-blue-600",
-      items: [
-        { text: "Pack weather-appropriate clothing for all seasons", city: "all" },
-        { text: "Bring formal attire for presentations/events", city: "all" },
-        { text: "Include comfortable walking shoes", city: "all" },
-        { text: "Pack thermal clothing for winter months", city: "all" },
-        { text: "Prepare for Parisian fashion standards", city: "Paris" },
-        { text: "Pack lighter clothing for Nice's Mediterranean climate", city: "Nice" },
-        { text: "Bring rain gear for frequent showers in Nantes", city: "Nantes" }
-      ]
-    },
-    {
-      id: 'cultural',
-      title: "Cultural Preparation",
-      icon: BookOpen,
-      color: "text-purple-600",
-      items: [
-        { text: "Learn basic French phrases and greetings", city: "all" },
-        { text: "Understand French social customs and etiquette", city: "all" },
-        { text: "Research local traditions and holidays", city: "all" },
-        { text: "Familiarize yourself with French educational system", city: "all" },
-        { text: "Learn about Parisian metro etiquette", city: "Paris" },
-        { text: "Understand Lyon's gastronomic culture", city: "Lyon" },
-        { text: "Research Strasbourg's German-French blend", city: "Strasbourg" }
-      ]
-    }
-  ];
 
   const handleStepComplete = (stepId: string) => {
     if (!completedSteps.includes(stepId)) {
@@ -278,14 +246,7 @@ export const PreArrival2Page = ({ onBack, onComplete, isCompleted }: PreArrival2
     }
   };
 
-  const getFilteredItems = (items: any[]) => {
-    if (selectedCity === 'all') return items;
-    return items.filter(item => item.city === 'all' || item.city === selectedCity);
-  };
-
   const renderCityInfo = () => {
-    if (selectedCity === 'all') return null;
-    
     const cityInfo = cityData[selectedCity as keyof typeof cityData];
     if (!cityInfo) return null;
 
@@ -301,22 +262,50 @@ export const PreArrival2Page = ({ onBack, onComplete, isCompleted }: PreArrival2
               Food Preparation
             </CardTitle>
           </CardHeader>
-          <CardContent className="space-y-3">
-            <div>
-              <h4 className="font-medium text-gray-900">Available Food:</h4>
-              <p className="text-gray-600 text-sm">{cityInfo.food.available}</p>
+          <CardContent className="space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <h4 className="font-medium text-gray-900 mb-2">Available Food:</h4>
+                <p className="text-gray-600 text-sm">{cityInfo.food.available}</p>
+              </div>
+              <div>
+                <h4 className="font-medium text-gray-900 mb-2">Major Supermarkets:</h4>
+                <p className="text-gray-600 text-sm">{cityInfo.food.supermarkets}</p>
+              </div>
+              <div>
+                <h4 className="font-medium text-gray-900 mb-2">Indian Items:</h4>
+                <p className="text-gray-600 text-sm">{cityInfo.food.indianItems}</p>
+              </div>
+              <div>
+                <h4 className="font-medium text-gray-900 mb-2">Must Bring:</h4>
+                <p className="text-blue-600 text-sm bg-blue-50 p-2 rounded">{cityInfo.food.mustBring}</p>
+              </div>
             </div>
-            <div>
-              <h4 className="font-medium text-gray-900">Major Supermarkets:</h4>
-              <p className="text-gray-600 text-sm">{cityInfo.food.supermarkets}</p>
-            </div>
-            <div>
-              <h4 className="font-medium text-gray-900">Indian Items:</h4>
-              <p className="text-gray-600 text-sm">{cityInfo.food.indianItems}</p>
-            </div>
-            <div>
-              <h4 className="font-medium text-gray-900">Must Bring:</h4>
-              <p className="text-blue-600 text-sm bg-blue-50 p-2 rounded">{cityInfo.food.mustBring}</p>
+            
+            {/* Interactive checklist for food preparation */}
+            <div className="mt-4 space-y-2">
+              <h4 className="font-medium text-gray-900">Food Preparation Checklist:</h4>
+              {[
+                'Research local supermarkets and ethnic stores',
+                'Pack essential spices and specialty ingredients',
+                'Learn about local food customs and meal times',
+                'Identify halal/vegetarian food sources'
+              ].map((item, index) => {
+                const stepId = `food-${selectedCity}-${index}`;
+                const isCompleted = completedSteps.includes(stepId);
+                return (
+                  <div key={index} className="flex items-center justify-between p-2 border rounded">
+                    <span className="text-sm">{item}</span>
+                    {!isCompleted ? (
+                      <Button size="sm" onClick={() => handleStepComplete(stepId)}>
+                        Complete
+                      </Button>
+                    ) : (
+                      <CheckCircle className="h-4 w-4 text-green-600" />
+                    )}
+                  </div>
+                );
+              })}
             </div>
           </CardContent>
         </Card>
@@ -329,14 +318,42 @@ export const PreArrival2Page = ({ onBack, onComplete, isCompleted }: PreArrival2
               Clothing & Weather
             </CardTitle>
           </CardHeader>
-          <CardContent className="space-y-3">
-            <div>
-              <h4 className="font-medium text-gray-900">Weather:</h4>
-              <p className="text-gray-600 text-sm">{cityInfo.weather.climate}</p>
+          <CardContent className="space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <h4 className="font-medium text-gray-900 mb-2">Climate:</h4>
+                <p className="text-gray-600 text-sm">{cityInfo.weather.climate}</p>
+              </div>
+              <div>
+                <h4 className="font-medium text-gray-900 mb-2">Recommended Clothing:</h4>
+                <p className="text-blue-600 text-sm bg-blue-50 p-2 rounded">{cityInfo.weather.clothing}</p>
+              </div>
             </div>
-            <div>
-              <h4 className="font-medium text-gray-900">Clothing:</h4>
-              <p className="text-blue-600 text-sm bg-blue-50 p-2 rounded">{cityInfo.weather.clothing}</p>
+            
+            {/* Interactive checklist for clothing */}
+            <div className="mt-4 space-y-2">
+              <h4 className="font-medium text-gray-900">Clothing Checklist:</h4>
+              {[
+                'Pack weather-appropriate clothing for all seasons',
+                'Include formal attire for presentations/events',
+                'Bring comfortable walking shoes',
+                'Pack thermal clothing for winter months'
+              ].map((item, index) => {
+                const stepId = `clothing-${selectedCity}-${index}`;
+                const isCompleted = completedSteps.includes(stepId);
+                return (
+                  <div key={index} className="flex items-center justify-between p-2 border rounded">
+                    <span className="text-sm">{item}</span>
+                    {!isCompleted ? (
+                      <Button size="sm" onClick={() => handleStepComplete(stepId)}>
+                        Complete
+                      </Button>
+                    ) : (
+                      <CheckCircle className="h-4 w-4 text-green-600" />
+                    )}
+                  </div>
+                );
+              })}
             </div>
           </CardContent>
         </Card>
@@ -349,18 +366,46 @@ export const PreArrival2Page = ({ onBack, onComplete, isCompleted }: PreArrival2
               Cultural Preparation
             </CardTitle>
           </CardHeader>
-          <CardContent className="space-y-3">
-            <div>
-              <h4 className="font-medium text-gray-900">Culture:</h4>
-              <p className="text-gray-600 text-sm">{cityInfo.culture.vibe}</p>
+          <CardContent className="space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <h4 className="font-medium text-gray-900 mb-2">Local Culture:</h4>
+                <p className="text-gray-600 text-sm">{cityInfo.culture.vibe}</p>
+              </div>
+              <div>
+                <h4 className="font-medium text-gray-900 mb-2">Local Traditions:</h4>
+                <p className="text-gray-600 text-sm">{cityInfo.culture.traditions}</p>
+              </div>
             </div>
             <div>
-              <h4 className="font-medium text-gray-900">Local Traditions:</h4>
-              <p className="text-gray-600 text-sm">{cityInfo.culture.traditions}</p>
-            </div>
-            <div>
-              <h4 className="font-medium text-gray-900">Important Tips:</h4>
+              <h4 className="font-medium text-gray-900 mb-2">Important Tips:</h4>
               <p className="text-purple-600 text-sm bg-purple-50 p-2 rounded">{cityInfo.culture.tips}</p>
+            </div>
+            
+            {/* Interactive checklist for cultural preparation */}
+            <div className="mt-4 space-y-2">
+              <h4 className="font-medium text-gray-900">Cultural Preparation Checklist:</h4>
+              {[
+                'Learn basic French phrases and greetings',
+                'Understand French social customs and etiquette',
+                'Research local traditions and holidays',
+                'Familiarize yourself with French educational system'
+              ].map((item, index) => {
+                const stepId = `culture-${selectedCity}-${index}`;
+                const isCompleted = completedSteps.includes(stepId);
+                return (
+                  <div key={index} className="flex items-center justify-between p-2 border rounded">
+                    <span className="text-sm">{item}</span>
+                    {!isCompleted ? (
+                      <Button size="sm" onClick={() => handleStepComplete(stepId)}>
+                        Complete
+                      </Button>
+                    ) : (
+                      <CheckCircle className="h-4 w-4 text-green-600" />
+                    )}
+                  </div>
+                );
+              })}
             </div>
           </CardContent>
         </Card>
@@ -410,8 +455,7 @@ export const PreArrival2Page = ({ onBack, onComplete, isCompleted }: PreArrival2
               <SelectValue placeholder="Choose a city" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">All Cities (General Info)</SelectItem>
-              {cities.slice(1).map((city) => (
+              {cities.map((city) => (
                 <SelectItem key={city} value={city}>{city}</SelectItem>
               ))}
             </SelectContent>
@@ -420,62 +464,6 @@ export const PreArrival2Page = ({ onBack, onComplete, isCompleted }: PreArrival2
       </div>
 
       {renderCityInfo()}
-
-      <div className="space-y-6">
-        {categories.map((category, index) => {
-          const Icon = category.icon;
-          const filteredItems = getFilteredItems(category.items);
-          
-          return (
-            <Card key={index}>
-              <CardHeader>
-                <CardTitle className="flex items-center">
-                  <Icon className={`h-6 w-6 mr-3 ${category.color}`} />
-                  {category.title}
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-3">
-                  {filteredItems.map((item, itemIndex) => {
-                    const stepId = `${category.id}-${itemIndex}`;
-                    const isStepCompleted = completedSteps.includes(stepId);
-                    
-                    return (
-                      <div key={itemIndex} className="flex items-center justify-between p-3 border rounded-lg">
-                        <div className="flex items-start">
-                          <div className={`w-6 h-6 rounded-full flex items-center justify-center mr-3 mt-0.5 ${
-                            isStepCompleted 
-                              ? 'bg-green-500 text-white' 
-                              : 'bg-gray-200 text-gray-600'
-                          }`}>
-                            {isStepCompleted ? <CheckCircle className="h-3 w-3" /> : '•'}
-                          </div>
-                          <div>
-                            <span className="text-gray-700">{item.text}</span>
-                            {item.city !== 'all' && (
-                              <span className="ml-2 px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-full">
-                                {item.city}
-                              </span>
-                            )}
-                          </div>
-                        </div>
-                        {!isStepCompleted && (
-                          <Button 
-                            size="sm"
-                            onClick={() => handleStepComplete(stepId)}
-                          >
-                            Complete
-                          </Button>
-                        )}
-                      </div>
-                    );
-                  })}
-                </div>
-              </CardContent>
-            </Card>
-          );
-        })}
-      </div>
 
       {allStepsCompleted && !isCompleted && (
         <Card className="mt-8 bg-green-50 border-green-200">
