@@ -22,5 +22,6 @@ if (!supabaseUrl || !supabaseAnonKey || supabaseUrl === '' || supabaseAnonKey ==
     })
   } as any
 } else {
-  export const supabase = createClient(supabaseUrl, supabaseAnonKey)
+  // Explicitly cast to string to prevent undefined values from causing indexOf errors
+  export const supabase = createClient(String(supabaseUrl), String(supabaseAnonKey))
 }
