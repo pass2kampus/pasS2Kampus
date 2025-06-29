@@ -1,3 +1,4 @@
+```json
 {
   "name": "vite_react_shadcn_ts",
   "private": true,
@@ -11,6 +12,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@supabase/supabase-js": "^2.44.4",
     "@hookform/resolvers": "^3.9.0",
     "@radix-ui/react-accordion": "^1.2.0",
     "@radix-ui/react-alert-dialog": "^1.1.1",
@@ -81,3 +83,4 @@
     "vite": "^5.4.1"
   }
 }
+```
