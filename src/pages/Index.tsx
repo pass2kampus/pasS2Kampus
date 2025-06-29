@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { SidebarProvider } from '@/components/ui/sidebar';
 import { AppSidebar } from '@/components/AppSidebar';
 import { ChecklistModule } from '@/components/ChecklistModule';
@@ -20,32 +20,22 @@ import { PreArrival1Page } from './PreArrival1Page';
 import { PreArrival2Page } from './PreArrival2Page';
 import { PostArrivalPage } from './PostArrivalPage';
 import { FinanceTrackingPage } from './FinanceTrackingPage';
-import { useUserProgress } from '@/hooks/useUserProgress';
-import { useAuth } from '@/hooks/useAuth';
 
 const Index = () => {
   const [currentPage, setCurrentPage] = useState('checklist');
   const [selectedSchool, setSelectedSchool] = useState(null);
-  const { progress, loading, updateProgress } = useUserProgress();
-  const { user } = useAuth();
-
-  // Fallback progress for when Supabase data is loading
-  const fallbackProgress = {
-    keys: 4,
-    completed_modules: [],
-    unlocked_modules: ['school', 'pre-arrival-1', 'pre-arrival-2'],
-    current_page: 'checklist'
-  };
-
-  const userProgress = progress || fallbackProgress;
+  const [userProgress, setUserProgress] = useState({
+    keys: 4, // Start with 4 keys
+    completedModules: [],
+    unlockedModules: ['school', 'pre-arrival-1', 'pre-arrival-2'], // Only first 3 modules unlocked
+    currentPage: 'checklist'
+  });
 
   // Update current page when user progress changes
-  const handleProgressUpdate = async (newProgress: any) => {
-    if (updateProgress) {
-      await updateProgress(newProgress);
-    }
-    if (newProgress.current_page && newProgress.current_page !== currentPage) {
-      setCurrentPage(newProgress.current_page);
+  const handleProgressUpdate = (newProgress: any) => {
+    setUserProgress(newProgress);
+    if (newProgress.currentPage && newProgress.currentPage !== currentPage) {
+      setCurrentPage(newProgress.currentPage);
     }
   };
 
@@ -57,6 +47,7 @@ const Index = () => {
       icon: '🏫',
       color: 'from-blue-500 to-cyan-500',
       type: 'school'
+      // No keysRequired - always available
     },
     {
       id: 'pre-arrival-1',
@@ -65,6 +56,7 @@ const Index = () => {
       icon: '✈️',
       color: 'from-green-500 to-emerald-500',
       type: 'checklist'
+      // No keysRequired - initially available
     },
     {
       id: 'pre-arrival-2',
@@ -73,6 +65,7 @@ const Index = () => {
       icon: '🎒',
       color: 'from-orange-500 to-red-500',
       type: 'checklist'
+      // No keysRequired - initially available
     },
     {
       id: 'post-arrival',
@@ -81,7 +74,7 @@ const Index = () => {
       icon: '🏠',
       color: 'from-indigo-500 to-purple-500',
       type: 'checklist',
-      keysRequired: 2
+      keysRequired: 2 // Requires 2 keys to unlock
     },
     {
       id: 'integration',
@@ -90,7 +83,7 @@ const Index = () => {
       icon: '🤝',
       color: 'from-rose-500 to-pink-500',
       type: 'integration',
-      keysRequired: 3
+      keysRequired: 3 // Requires 3 keys to unlock
     },
     {
       id: 'finance',
@@ -99,7 +92,7 @@ const Index = () => {
       icon: '📄',
       color: 'from-teal-500 to-blue-500',
       type: 'documents',
-      keysRequired: 1
+      keysRequired: 1 // Requires 1 key to unlock
     },
   ];
 
@@ -147,13 +140,13 @@ const Index = () => {
             onComplete={() => {
               const newProgress = {
                 ...userProgress,
-                completed_modules: [...userProgress.completed_modules, 'pre-arrival-1'],
+                completedModules: [...userProgress.completedModules, 'pre-arrival-1'],
                 keys: userProgress.keys + 1
               };
               handleProgressUpdate(newProgress);
               setCurrentPage('checklist');
             }}
-            isCompleted={userProgress.completed_modules.includes('pre-arrival-1')}
+            isCompleted={userProgress.completedModules.includes('pre-arrival-1')}
           />
         );
       case 'pre-arrival-2':
@@ -163,13 +156,13 @@ const Index = () => {
             onComplete={() => {
               const newProgress = {
                 ...userProgress,
-                completed_modules: [...userProgress.completed_modules, 'pre-arrival-2'],
+                completedModules: [...userProgress.completedModules, 'pre-arrival-2'],
                 keys: userProgress.keys + 1
               };
               handleProgressUpdate(newProgress);
               setCurrentPage('checklist');
             }}
-            isCompleted={userProgress.completed_modules.includes('pre-arrival-2')}
+            isCompleted={userProgress.completedModules.includes('pre-arrival-2')}
           />
         );
       case 'post-arrival':
@@ -179,13 +172,13 @@ const Index = () => {
             onComplete={() => {
               const newProgress = {
                 ...userProgress,
-                completed_modules: [...userProgress.completed_modules, 'post-arrival'],
+                completedModules: [...userProgress.completedModules, 'post-arrival'],
                 keys: userProgress.keys + 1
               };
               handleProgressUpdate(newProgress);
               setCurrentPage('checklist');
             }}
-            isCompleted={userProgress.completed_modules.includes('post-arrival')}
+            isCompleted={userProgress.completedModules.includes('post-arrival')}
           />
         );
       case 'finance-tracking':
@@ -195,13 +188,13 @@ const Index = () => {
             onComplete={() => {
               const newProgress = {
                 ...userProgress,
-                completed_modules: [...userProgress.completed_modules, 'finance'],
+                completedModules: [...userProgress.completedModules, 'finance'],
                 keys: userProgress.keys + 1
               };
               handleProgressUpdate(newProgress);
               setCurrentPage('checklist');
             }}
-            isCompleted={userProgress.completed_modules.includes('finance')}
+            isCompleted={userProgress.completedModules.includes('finance')}
           />
         );
       case 'qa':
@@ -238,14 +231,6 @@ const Index = () => {
         );
     }
   };
-
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-600"></div>
-      </div>
-    );
-  }
 
   return (
     <SidebarProvider>
