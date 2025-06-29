@@ -1,18 +1,22 @@
-import { Bell, User } from 'lucide-react';
+import { Bell, User, LogOut } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { SidebarTrigger } from '@/components/ui/sidebar';
+import { useAuth } from '@/hooks/useAuth';
+import { toast } from '@/components/ui/sonner';
 
 interface HeaderProps {
   currentPage: string;
   setCurrentPage: (page: string) => void;
   userProgress: {
     keys: number;
-    completedModules: string[];
-    unlockedModules: string[];
+    completed_modules: string[];
+    unlocked_modules: string[];
   };
 }
 
 export const Header = ({ currentPage, setCurrentPage, userProgress }: HeaderProps) => {
+  const { user, signOut } = useAuth();
+
   const getPageTitle = () => {
     switch (currentPage) {
       case 'checklist': return 'Checklist';
@@ -27,6 +31,15 @@ export const Header = ({ currentPage, setCurrentPage, userProgress }: HeaderProp
       case 'profile': return 'Profile';
       case 'notifications': return 'Notifications';
       default: return 'pasS2Kampus';
+    }
+  };
+
+  const handleSignOut = async () => {
+    const { error } = await signOut();
+    if (error) {
+      toast.error('Error signing out');
+    } else {
+      toast.success('Signed out successfully');
     }
   };
 
@@ -78,6 +91,18 @@ export const Header = ({ currentPage, setCurrentPage, userProgress }: HeaderProp
             >
               <User className="h-5 w-5" />
             </Button>
+
+            {user && (
+              <Button 
+                variant="ghost" 
+                size="sm"
+                onClick={handleSignOut}
+                className="p-2"
+                title="Sign Out"
+              >
+                <LogOut className="h-5 w-5" />
+              </Button>
+            )}
           </div>
         </div>
       </div>
