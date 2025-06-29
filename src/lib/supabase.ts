@@ -3,7 +3,12 @@ import { createClient } from '@supabase/supabase-js'
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY
 
-if (!supabaseUrl || !supabaseAnonKey || supabaseUrl === '' || supabaseAnonKey === '') {
+// Check if environment variables are properly defined and are actual strings
+const isValidString = (value: any): value is string => {
+  return typeof value === 'string' && value.length > 0 && value !== 'undefined'
+}
+
+if (!isValidString(supabaseUrl) || !isValidString(supabaseAnonKey)) {
   console.warn('Supabase environment variables are not configured. Please set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY in your .env file.')
   // Create a mock client to prevent the app from crashing
   export const supabase = {
@@ -22,6 +27,5 @@ if (!supabaseUrl || !supabaseAnonKey || supabaseUrl === '' || supabaseAnonKey ==
     })
   } as any
 } else {
-  // Explicitly cast to string to prevent undefined values from causing indexOf errors
-  export const supabase = createClient(String(supabaseUrl), String(supabaseAnonKey))
+  export const supabase = createClient(supabaseUrl, supabaseAnonKey)
 }
