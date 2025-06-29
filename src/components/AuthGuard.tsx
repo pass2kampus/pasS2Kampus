@@ -48,8 +48,11 @@ export function AuthGuard({ children, fallback }: AuthGuardProps) {
           onClose={() => setShowAuthModal(false)} 
         />
       </>
-    )
-  }
+          )
+        }
 
   return <>{children}</>
+}
+    )
+  }
 }
