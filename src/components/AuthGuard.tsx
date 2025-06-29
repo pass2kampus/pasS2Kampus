@@ -41,15 +41,18 @@ export function AuthGuard({ children, fallback }: AuthGuardProps) {
                 </Button>
               </CardContent>
             </Card>
-          </div>
-        )}
+          )}
+        />
         <AuthModal 
           isOpen={showAuthModal} 
           onClose={() => setShowAuthModal(false)} 
         />
       </>
-    )
-  }
+          )
+        }
 
   return <>{children}</>
+}
+    )
+  }
 }
